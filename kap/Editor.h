@@ -2,6 +2,8 @@
 #define KAP_EDITOR_H_
 
 #include "Processor.h"
+
+#include "ui/LookAndFeel.h"
 #include "ui/MainPanel.h"
 
 namespace kap {
@@ -18,7 +20,8 @@ public:
 private:
   Processor& processorRef;
 
-  std::unique_ptr<ui::MainPanel> mMainPanel;
+  std::unique_ptr< ui::LookAndFeel > mLookAndFeel;
+  std::unique_ptr< ui::MainPanel > mMainPanel;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR( Editor )
 };

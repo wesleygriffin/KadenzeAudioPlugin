@@ -23,6 +23,7 @@ target_sources(KadenzeAudioPlugin
         managers/PresetManager.cpp
         ui/CenterPanel.cpp
         ui/CenterPanelMenuBar.cpp
+        ui/LookAndFeel.cpp
         ui/FxPanel.cpp
         ui/GainPanel.cpp
         ui/MainPanel.cpp

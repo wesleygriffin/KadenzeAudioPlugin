@@ -2,10 +2,16 @@
 
 namespace kap {
 
-Editor::Editor( Processor& p ) : AudioProcessorEditor{ &p }, processorRef{ p }, mMainPanel{ new ui::MainPanel( &p ) }
+Editor::Editor( Processor& p )
+: AudioProcessorEditor{ &p },
+  processorRef{ p },
+  mLookAndFeel{ new ui::LookAndFeel },
+  mMainPanel{ new ui::MainPanel( &p ) }
 {
   setSize( ui::MainPanel::kWidth, ui::MainPanel::kHeight );
-  addAndMakeVisible(mMainPanel.get());
+  setLookAndFeel( mLookAndFeel.get() );
+  ui::LookAndFeel::setDefaultLookAndFeel( mLookAndFeel.get() );
+  addAndMakeVisible( mMainPanel.get() );
 }
 
 Editor::~Editor() {}
