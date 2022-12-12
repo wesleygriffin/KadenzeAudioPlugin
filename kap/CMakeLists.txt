@@ -1,3 +1,10 @@
+juce_add_binary_data(ui_assets
+    HEADER_NAME ui_assets.h
+    NAMESPACE ui
+    SOURCES
+        assets/kadenze_bg.png
+        assets/kadenze_knob.png)
+
 juce_add_plugin(KadenzeAudioPlugin
     # VERSION ...                               # Set this if the plugin version is different to the project version
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
@@ -20,6 +27,7 @@ target_sources(KadenzeAudioPlugin
         Editor.cpp
         Processor.cpp
         Parameters.cpp
+        components/VuMeter.cpp
         managers/PresetManager.cpp
         ui/CenterPanel.cpp
         ui/CenterPanelMenuBar.cpp
@@ -42,7 +50,7 @@ target_compile_definitions(KadenzeAudioPlugin
         JUCE_VST3_CAN_REPLACE_VST2=0)
 target_link_libraries(KadenzeAudioPlugin
     PRIVATE
-        # AudioPluginData           # If we'd created a binary data target, we'd link to it here
+        ui_assets
         juce::juce_audio_utils
     PUBLIC
         juce::juce_recommended_config_flags

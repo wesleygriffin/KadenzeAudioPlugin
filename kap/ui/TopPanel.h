@@ -19,6 +19,7 @@ public:
   static constexpr int kPresetButtonHeight = 25;
   static constexpr int kPresetComboBoxWidth = 200;
   static constexpr int kPresetComboBoxHeight = kPresetButtonHeight;
+  static constexpr int kLabelWidth = 220;
 
 private:
   std::unique_ptr< juce::TextButton > mInitPresetButton;

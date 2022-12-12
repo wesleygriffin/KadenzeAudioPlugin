@@ -1,5 +1,6 @@
 #include "FxPanel.h"
 
+#include "ui/LookAndFeel.h"
 #include "ui/ParameterDial.h"
 
 #include "Processor.h"
@@ -21,7 +22,7 @@ void FxPanel::setStyle( Style style )
 
   const int x = static_cast< int >( ( getWidth() * .5f ) - ( ParameterDial::kTotalWidth * .5f ) );
   const int horizontalOffset = static_cast< int >( ParameterDial::kTotalWidth * 1.5 );
-  const int y = static_cast< int >( ( getHeight() * .5f ) - ( ParameterDial::kTotalHeight * .5f ) );
+  const int y = static_cast< int >( ( getHeight() * .55f ) - ( ParameterDial::kTotalHeight * .5f ) );
 
   switch ( mStyle ) {
   case Style::kDelay:
@@ -41,10 +42,11 @@ void FxPanel::setStyle( Style style )
 void FxPanel::paint( juce::Graphics& g )
 {
   PanelBase::paint( g );
-  switch ( mStyle ) {
-  case Style::kDelay: break;
-  case Style::kChorus: break;
-  }
+
+  const std::string label = ( mStyle == Style::kDelay ) ? "DELAY" : "CHORUS";
+  g.setColour( LookAndFeel::kColor4 );
+  g.setFont( LookAndFeel::kFont3 );
+  g.drawFittedText( label, 0, 0, getWidth(), 80, juce::Justification::centred, 1 );
 }
 
 void FxPanel::comboBoxChanged( juce::ComboBox* comboBoxThatHasChanged )
@@ -59,10 +61,13 @@ void FxPanel::addDial( const kap::Parameters::Parameter& parameter, int x, int y
   addAndMakeVisible( mDials.back().get() );
 
   mLabels.emplace_back( new juce::Label( parameter.name + "Label", parameter.name ) );
+  mLabels.back()->setFont( LookAndFeel::kFont1 );
   mLabels.back()->setJustificationType( juce::Justification::centred );
-  mLabels.back()->setColour( juce::Label::ColourIds::textColourId, juce::Colours::whitesmoke );
   mLabels.back()->setBounds(
-    x, y + ParameterDial::kDialHeight, ParameterDial::kTotalWidth, ParameterDial::kLabelHeight );
+    x,
+    y + static_cast< int >( ParameterDial::kDialHeight * .95f ),
+    ParameterDial::kTotalWidth,
+    ParameterDial::kLabelHeight );
   addAndMakeVisible( mLabels.back().get() );
 }
 

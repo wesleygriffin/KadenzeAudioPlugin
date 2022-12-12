@@ -23,6 +23,8 @@ private:
   std::unique_ptr< ui::LookAndFeel > mLookAndFeel;
   std::unique_ptr< ui::MainPanel > mMainPanel;
 
+  juce::Image mBackgroundImage;
+
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR( Editor )
 };
 

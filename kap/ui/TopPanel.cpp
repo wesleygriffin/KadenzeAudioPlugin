@@ -1,5 +1,7 @@
 #include "TopPanel.h"
 
+#include "ui/LookAndFeel.h"
+
 #include "Processor.h"
 
 namespace ui {
@@ -48,7 +50,10 @@ TopPanel::TopPanel( kap::Processor* processor ) : PanelBase{ processor }
 void TopPanel::paint( juce::Graphics& g )
 {
   PanelBase::paint( g );
-  g.drawFittedText( "KADENZE AUDIO PLUGIN", 0, 0, getWidth(), getHeight(), juce::Justification::centredRight, 1 );
+  g.setColour( LookAndFeel::kColor1 );
+  g.setFont( LookAndFeel::kFont2 );
+  g.drawFittedText(
+    "KADENZE AUDIO PLUGIN", kWidth - kLabelWidth, 0, kLabelWidth, getHeight(), juce::Justification::centred, 1 );
 }
 
 void TopPanel::updatePresetComboBox()

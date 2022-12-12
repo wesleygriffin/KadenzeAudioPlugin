@@ -15,10 +15,13 @@ public:
   static const juce::Colour kColor5;
   static const juce::Colour kColor6;
   static const juce::Colour kColor7;
+  static const juce::Colour kColor8;
 
   static const juce::Font kFont1;
   static const juce::Font kFont2;
   static const juce::Font kFont3;
+
+  static const float kCornerSize;
 
   LookAndFeel();
   virtual ~LookAndFeel() = default;
@@ -43,6 +46,13 @@ public:
     const juce::Colour* ) override;
 
   void drawComboBox( juce::Graphics&, int, int, bool, int, int, int, int, juce::ComboBox& ) override;
+
+  void drawRotarySlider( juce::Graphics&, int, int, int, int, float, float, float, juce::Slider& ) override;
+
+  void drawLabel( juce::Graphics&, juce::Label& ) override;
+
+private:
+  juce::Image mSliderImage;
 };
 
 } // namespace ui

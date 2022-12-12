@@ -6,13 +6,8 @@ namespace ui {
 
 PanelBase::PanelBase( kap::Processor* processor ) noexcept : mProcessor{ processor } {}
 
-void PanelBase::paint( juce::Graphics& g )
+void PanelBase::paint( juce::Graphics& )
 {
-  g.setColour( juce::Colours::darkgrey );
-  g.fillAll();
-
-  g.setColour( juce::Colours::whitesmoke );
-  g.drawRoundedRectangle( 0, 0, static_cast< float >( getWidth() ), static_cast< float >( getHeight() ), 4, 2 );
 }
 
 void PanelBase::mouseEnter( const juce::MouseEvent& )

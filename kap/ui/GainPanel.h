@@ -10,6 +10,10 @@
 
 #include <memory>
 
+namespace components {
+class VuMeter;
+}
+
 namespace ui {
 
 class GainPanel final : public PanelBase
@@ -22,10 +26,12 @@ public:
 
   static constexpr int kWidth = 100;
   static constexpr int kHeight = MainPanel::kHeight - TopPanel::kHeight;
+  static constexpr int kMeterWidth = static_cast< int >( ParameterDial::kDialHeight * 1.5f );
 
 private:
   std::unique_ptr< ParameterDial > mDial;
   std::unique_ptr< juce::Label > mLabel;
+  std::unique_ptr< components::VuMeter > mMeter;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR( GainPanel );
 };
