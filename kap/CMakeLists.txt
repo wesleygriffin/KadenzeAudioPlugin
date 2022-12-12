@@ -20,7 +20,7 @@ target_sources(KadenzeAudioPlugin
         Editor.cpp
         Processor.cpp
         Parameters.cpp
-        PresetManager.cpp
+        managers/PresetManager.cpp
         ui/CenterPanel.cpp
         ui/CenterPanelMenuBar.cpp
         ui/FxPanel.cpp
@@ -33,6 +33,7 @@ target_sources(KadenzeAudioPlugin
 target_include_directories(KadenzeAudioPlugin PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(KadenzeAudioPlugin
     PUBLIC
+        DONT_SET_USING_JUCE_NAMESPACE=1
         JUCE_MODAL_LOOPS_PERMITTED=1
         # JUCE_WEB_BROWSER and JUCE_USE_CURL would be on by default, but you might not need them.
         JUCE_WEB_BROWSER=0  # If you remove this, add `NEEDS_WEB_BROWSER TRUE` to the `juce_add_plugin` call

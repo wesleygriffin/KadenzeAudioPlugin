@@ -7,7 +7,8 @@ PresetManager::PresetManager( juce::AudioProcessor* processor, juce::String file
   mFileExtension{ std::move( fileExtension ) },
   mPresetDirectory{
     juce::File::getSpecialLocation( juce::File::userDocumentsDirectory ).getFullPathName()
-    + juce::File::getSeparatorString() + mProcessor->getName() }
+    + juce::File::getSeparatorString() + juce::String( JucePlugin_Manufacturer ) + juce::File::getSeparatorString()
+    + mProcessor->getName() }
 {
   if ( !mPresetDirectory.exists() ) {
     mPresetDirectory.createDirectory();
