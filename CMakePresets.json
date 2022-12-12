@@ -1,0 +1,38 @@
+{
+    "version": 5,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 24
+    },
+    "configurePresets": [
+        {
+            "name": "Default",
+            "binaryDir": "build",
+            "generator": "Visual Studio 17 2022",
+            "cacheVariables": {
+                "JUCE_BUILD_EXTRAS": "OFF",
+                "JUCE_BUILD_EXAMPLES": "ON",
+                "JUCE_ENABLE_MODULE_SOURCE_GROUPS": "OFF",
+                "JUCE_COPY_PLUGIN_AFTER_BUILD": "OFF"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "Default",
+            "configurePreset": "Default",
+            "hidden": true,
+            "jobs": 4
+        },
+        {
+            "name": "Debug",
+            "inherits": "Default",
+            "configuration": "Debug"
+        },
+        {
+            "name": "Release",
+            "inherits": "Default",
+            "configuration": "Release"
+        }
+    ]
+}
