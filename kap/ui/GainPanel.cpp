@@ -9,16 +9,9 @@
 namespace ui {
 
 GainPanel::GainPanel( kap::Processor* processor )
-: PanelBase{ processor }, mMeter{ new components::VuMeter{ processor, 2 } }
+: PanelBase{ processor }, mMeter{ new components::VuMeter{ processor } }
 {
   setSize( kWidth, kHeight );
-
-  mMeter->setBounds(
-    static_cast< int >( ( getWidth() * .5f ) - ( kMeterWidth * .5f ) ),
-    static_cast< int >( getHeight() * .3f ),
-    kMeterWidth,
-    static_cast< int >( getHeight() * .7f ) );
-  addAndMakeVisible( mMeter.get() );
 }
 
 GainPanel::~GainPanel() = default;
@@ -42,6 +35,20 @@ void GainPanel::setParameter( const kap::Parameters::Parameter& parameter )
     ParameterDial::kTotalWidth,
     ParameterDial::kLabelHeight );
   addAndMakeVisible( mLabel.get() );
+
+  mMeter->setBounds(
+    static_cast< int >( ( getWidth() * .5f ) - ( kMeterWidth * .5f ) ),
+    static_cast< int >( getHeight() * .45f ),
+    kMeterWidth,
+    static_cast< int >( getHeight() * .5f ) );
+  mMeter->setGainCallback( [ & ]( int channel ) {
+    if ( parameter == kap::Parameters::kInputGain ) {
+      return mProcessor->getInputMeterLevel( channel );
+    } else {
+      return mProcessor->getOutputMeterLevel( channel );
+    }
+  } );
+  addAndMakeVisible( mMeter.get() );
 }
 
 } // namespace ui

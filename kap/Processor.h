@@ -53,6 +53,9 @@ public:
 
   PresetManager* getPresetManager() { return mPresetManager.get(); }
 
+  float getInputMeterLevel( int channel ) { return mInputGain[ channel ]->getMeterLevel(); }
+  float getOutputMeterLevel( int channel ) { return mOutputGain[ channel ]->getMeterLevel(); }
+
 private:
   static constexpr float kMaxDelayTimeInSeconds = 2.f;
 

@@ -12,6 +12,7 @@ public:
   {
     const juce::ParameterID id;
     const juce::String name;
+    const std::size_t idHash;
     operator juce::StringRef() const { return id.getParamID(); }
     operator juce::String() const { return id.getParamID(); }
   };
@@ -25,6 +26,11 @@ public:
   static const Parameter kModRate;
   static const Parameter kModDepth;
 };
+
+inline bool operator==( const Parameters::Parameter& lhs, const Parameters::Parameter& rhs ) noexcept
+{
+  return lhs.idHash == rhs.idHash;
+}
 
 } // namespace kap
 

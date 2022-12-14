@@ -26,7 +26,7 @@ public:
 
   static constexpr int kWidth = 100;
   static constexpr int kHeight = MainPanel::kHeight - TopPanel::kHeight;
-  static constexpr int kMeterWidth = static_cast< int >( ParameterDial::kDialHeight * 1.5f );
+  static constexpr int kMeterWidth = 36;
 
 private:
   std::unique_ptr< ParameterDial > mDial;

@@ -9,44 +9,43 @@
 
 namespace components {
 
-VuMeter::VuMeter( kap::Processor* processor, int numChannels )
-: mProcessor{ processor }, mNumChannels{ numChannels }, mLevels( mNumChannels, 0.f )
-{}
+VuMeter::VuMeter( kap::Processor* processor ) : mProcessor{ processor }, mLevels{ 0.f, 0.f } {}
 
 void VuMeter::paint( juce::Graphics& g )
 {
-  const int meterWidth = getWidth() / mNumChannels + 2;
+  const float meterHeight = static_cast< float >( getHeight() );
+  const float meterWidth = getWidth() / ( numChannels() + 1.f );
 
   g.setColour( ui::LookAndFeel::kColor6 );
-  for ( int i = 0; i < mNumChannels; ++i ) {
-    g.setColour( juce::Colour( 125, 125, 75 * i ) );
-    g.fillRect( i * ( meterWidth * 2 ), 0, meterWidth, getHeight() );
-  }
+  g.fillRect( 0.f, 0.f, meterWidth, meterHeight );
+  g.fillRect( meterWidth * 1.5f, 0.f, meterWidth, meterHeight );
 
-  std::vector< float > fills( mLevels.size() );
-  std::transform( mLevels.begin(), mLevels.end(), fills.begin(), [ & ]( float level ) {
-    return getHeight() - ( getHeight() * level );
-  } );
+  decltype( mLevels ) fills;
+  fills[ 0 ] = std::max( 0.f, meterHeight - ( meterHeight * mLevels[ 0 ] ) );
+  fills[ 1 ] = std::max( 0.f, meterHeight - ( meterHeight * mLevels[ 1 ] ) );
 
   g.setColour( ui::LookAndFeel::kColor7 );
-  for ( int i = 0; i < mNumChannels; ++i ) {
-    g.fillRect( i * ( meterWidth * 2 ), static_cast< int >( fills[ i ] ), meterWidth, getHeight() );
-  }
+  g.fillRect( 0.f, fills[ 0 ], meterWidth, meterHeight );
+  g.fillRect( meterWidth * 1.5f, fills[ 1 ], meterWidth, meterHeight );
 }
 
 void VuMeter::timerCallback()
 {
-  for ( int i = 0; i < mNumChannels; ++i ) {
-    const float newLevel = mGainCallback( i );
-    if ( newLevel > mLevels[ i ] ) {
-      mLevels[ i ] = newLevel;
-    } else {
-      mLevels[ i ] = util::kMeterSmoothingCoeff< float > * ( mLevels[ i ] - newLevel ) * newLevel;
-    }
+  decltype( mLevels ) newLevels;
+  newLevels[ 0 ] = mGainCallback( 0 );
+  newLevels[ 1 ] = mGainCallback( 1 );
 
-    JUCE_UNDENORMALISE( mLevels[ i ] )
-    if ( mLevels[ i ] > 0.f ) repaint();
-  }
+  mLevels[ 0 ] = ( newLevels[ 0 ] > mLevels[ 0 ] )
+    ? newLevels[ 0 ]
+    : util::kMeterSmoothingCoeff< float > * ( mLevels[ 0 ] - newLevels[ 0 ] ) + newLevels[ 0 ];
+  mLevels[ 1 ] = ( newLevels[ 1 ] > mLevels[ 1 ] )
+    ? newLevels[ 1 ]
+    : util::kMeterSmoothingCoeff< float > * ( mLevels[ 1 ] - newLevels[ 1 ] ) + newLevels[ 1 ];
+
+  JUCE_UNDENORMALISE( mLevels[ 0 ] )
+  JUCE_UNDENORMALISE( mLevels[ 1 ] )
+
+  if ( mLevels[ 0 ] > 0.f || mLevels[ 1 ] > 0.f ) repaint();
 }
 
 void VuMeter::setGainCallback( std::function< float( int ) > callback )

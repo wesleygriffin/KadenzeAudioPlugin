@@ -15,7 +15,7 @@ namespace components {
 class VuMeter : public juce::Component, public juce::Timer
 {
 public:
-  VuMeter( kap::Processor* processor, int numChannels );
+  VuMeter( kap::Processor* processor );
 
   void paint( juce::Graphics& g ) override;
 
@@ -25,9 +25,10 @@ public:
 
 private:
   kap::Processor* mProcessor;
-  int mNumChannels;
   std::function< float( int ) > mGainCallback;
-  std::vector< float > mLevels;
+  std::array< float, 2 > mLevels;
+
+  int numChannels() const { return static_cast< int >( mLevels.size() ); }
 };
 
 } // namespace components
