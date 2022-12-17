@@ -1,3 +1,5 @@
+add_subdirectory(dsp)
+
 juce_add_binary_data(ui_assets
     HEADER_NAME ui_assets.h
     NAMESPACE ui
@@ -50,6 +52,7 @@ target_compile_definitions(KadenzeAudioPlugin
         JUCE_VST3_CAN_REPLACE_VST2=0)
 target_link_libraries(KadenzeAudioPlugin
     PRIVATE
+        dsp
         ui_assets
         juce::juce_audio_utils
     PUBLIC

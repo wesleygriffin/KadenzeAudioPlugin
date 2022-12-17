@@ -1,39 +1,24 @@
-#ifndef KAP_DSP_GAIN_H_
-#define KAP_DSP_GAIN_H_
-
-#include "util/Smoothing.h"
-
-#include <juce_core/juce_core.h>
+#ifndef DSP_GAIN_H_
+#define DSP_GAIN_H_
 
 namespace dsp {
 
-template < class Real >
+template < typename Real >
 class Gain
 {
 public:
-  void process( Real const* inBuffer, int numSamples, Real gain, Real* outBuffer );
+  void process( Real const* inBuffer, int numSamples, Real gainInDecibels, Real smoothingCoefficient, Real* outBuffer );
 
-  float getMeterLevel() const { return ( juce::Decibels::decibelsToGain( mOutputSmoothed ) ); }
+  float getMeterLevel() const { return mOutputSmoothed; }
 
 private:
-  float mGainSmoothed{ 0.f };
-  float mOutputSmoothed{ 0.f };
+  Real mGainSmoothed{ 0 };
+  Real mOutputSmoothed{ 0 };
 };
 
-template < class Real >
-void Gain< Real >::process( Real const* inBuffer, int numSamples, Real gain, Real* outBuffer )
-{
-  const float gainMapped = juce::Decibels::decibelsToGain< Real >( juce::jmap< Real >( gain, 0, 1, -24, 24 ), -24 );
-  mGainSmoothed = mGainSmoothed - util::kParameterSmoothingCoeff_Generic< float > * ( mGainSmoothed - gainMapped );
-
-  for ( int sample = 0; sample < numSamples; ++sample ) {
-    outBuffer[ sample ] = inBuffer[ sample ] * mGainSmoothed;
-  }
-
-  float absOutput = std::abs( outBuffer[ 0 ] );
-  mOutputSmoothed = util::kMeterSmoothingCoeff< float > * ( mOutputSmoothed - absOutput ) + absOutput;
-}
+extern Gain< float > fGain;
+extern Gain< double > dGain;
 
 } // namespace dsp
 
-#endif // KAP_DSP_GAIN_H_
+#endif // DSP_GAIN_H_

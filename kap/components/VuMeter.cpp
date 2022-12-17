@@ -2,10 +2,9 @@
 
 #include "ui/LookAndFeel.h"
 
-#include "util/Smoothing.h"
-
 #include "Parameters.h"
 #include "Processor.h"
+#include "Smoothing.h"
 
 namespace components {
 
@@ -37,10 +36,10 @@ void VuMeter::timerCallback()
 
   mLevels[ 0 ] = ( newLevels[ 0 ] > mLevels[ 0 ] )
     ? newLevels[ 0 ]
-    : util::kMeterSmoothingCoeff< float > * ( mLevels[ 0 ] - newLevels[ 0 ] ) + newLevels[ 0 ];
+    : dsp::kMeterSmoothingCoeff< float > * ( mLevels[ 0 ] - newLevels[ 0 ] ) + newLevels[ 0 ];
   mLevels[ 1 ] = ( newLevels[ 1 ] > mLevels[ 1 ] )
     ? newLevels[ 1 ]
-    : util::kMeterSmoothingCoeff< float > * ( mLevels[ 1 ] - newLevels[ 1 ] ) + newLevels[ 1 ];
+    : dsp::kMeterSmoothingCoeff< float > * ( mLevels[ 1 ] - newLevels[ 1 ] ) + newLevels[ 1 ];
 
   JUCE_UNDENORMALISE( mLevels[ 0 ] )
   JUCE_UNDENORMALISE( mLevels[ 1 ] )

@@ -1,15 +1,11 @@
-#ifndef KAP_DSP_LFO_H_
-#define KAP_DSP_LFO_H_
-
-#include "util/Interpolation.h"
-
-#include <juce_core/juce_core.h>
+#ifndef DSP_LFO_H_
+#define DSP_LFO_H_
 
 #include <memory>
 
 namespace dsp {
 
-template < class Real >
+template < typename Real >
 class Lfo
 {
 public:
@@ -30,34 +26,9 @@ private:
   std::unique_ptr< Real[] > mBuffer{};
 };
 
-template < class Real >
-void Lfo< Real >::setSampleRate( double sampleRate )
-{
-  mSampleRate = sampleRate;
-  mBufferSize = static_cast< size_t >( mSampleRate * mMaxDelayTimeInSeconds );
-  mBuffer.reset( new Real[ mBufferSize ] );
-  juce::zeromem( mBuffer.get(), mBufferSize * sizeof( Real ) );
-};
-
-template < class Real >
-void Lfo< Real >::reset()
-{
-  mBufferSize = 0;
-  mBuffer.reset();
-}
-
-template < class Real >
-void Lfo< Real >::process( Real rate, Real depth, int numSamples )
-{
-  const Real rateMapped = juce::jmap( rate, Real( 0 ), Real( 1 ), Real( .01 ), Real( 10 ) );
-  const Real rateOverSample = rateMapped / static_cast< Real >( mSampleRate );
-  for ( int sample = 0; sample < numSamples; ++sample ) {
-    mPhase = ( mPhase + rateOverSample > 1 ) ? mPhase + rateOverSample - 1 : mPhase + rateOverSample;
-    const Real lfoPosition = std::sin( mPhase * juce::MathConstants< Real >::twoPi ) * depth;
-    mBuffer[ sample ] = lfoPosition;
-  }
-}
+extern Lfo< float > fLfo;
+extern Lfo< double > dLfo;
 
 } // namespace dsp
 
-#endif // KAP_DSP_LFO_H_
+#endif // DSP_LFO_H_

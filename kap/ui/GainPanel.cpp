@@ -8,8 +8,7 @@
 
 namespace ui {
 
-GainPanel::GainPanel( kap::Processor* processor )
-: PanelBase{ processor }, mMeter{ new components::VuMeter{ processor } }
+GainPanel::GainPanel( kap::Processor* processor ) : PanelBase{ processor }
 {
   setSize( kWidth, kHeight );
 }
@@ -36,6 +35,7 @@ void GainPanel::setParameter( const kap::Parameters::Parameter& parameter )
     ParameterDial::kLabelHeight );
   addAndMakeVisible( mLabel.get() );
 
+  mMeter.reset( new components::VuMeter( mProcessor ) );
   mMeter->setBounds(
     static_cast< int >( ( getWidth() * .5f ) - ( kMeterWidth * .5f ) ),
     static_cast< int >( getHeight() * .45f ),
@@ -43,9 +43,15 @@ void GainPanel::setParameter( const kap::Parameters::Parameter& parameter )
     static_cast< int >( getHeight() * .5f ) );
   mMeter->setGainCallback( [ & ]( int channel ) {
     if ( parameter == kap::Parameters::kInputGain ) {
-      return mProcessor->getInputMeterLevel( channel );
+      const float level = mProcessor->getInputMeterLevel( channel );
+      juce::Logger::writeToLog(
+        "Channel " + std::to_string( channel ) + " input meter level: " + std::to_string( level ) );
+      return level;
     } else {
-      return mProcessor->getOutputMeterLevel( channel );
+      const float level = mProcessor->getOutputMeterLevel( channel );
+      juce::Logger::writeToLog(
+        "Channel " + std::to_string( channel ) + " output meter level: " + std::to_string( level ) );
+      return level;
     }
   } );
   addAndMakeVisible( mMeter.get() );

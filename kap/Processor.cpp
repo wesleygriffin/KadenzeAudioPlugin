@@ -1,6 +1,7 @@
 #include "Processor.h"
 #include "Editor.h"
 #include "Parameters.h"
+#include "Smoothing.h"
 
 namespace kap {
 
@@ -45,6 +46,8 @@ Processor::Processor() : AudioProcessor
 , mValueTreeState{ *this, nullptr, juce::Identifier( "Preset" ), createParameterLayout() },
   mPresetManager{ new PresetManager{ this, ".kap" } }
 {
+  juce::Logger::setCurrentLogger(
+    juce::FileLogger::createDefaultAppLogger( "Fraktured Labs", "KadenzeAudioPlugin.txt", "Processor Starting" ) );
   mInputGainParam = mValueTreeState.getRawParameterValue( Parameters::kInputGain );
   mOutputGainParam = mValueTreeState.getRawParameterValue( Parameters::kOutputGain );
   mTypeParam = mValueTreeState.getRawParameterValue( Parameters::kType );
@@ -200,22 +203,32 @@ void Processor::processBlock( juce::AudioBuffer< float >& buffer, juce::MidiBuff
   for ( int channel = 0; channel < totalNumInputChannels; ++channel ) {
     auto* channelData = buffer.getWritePointer( channel );
 
-    mInputGain[ channel ]->process( channelData, numSamples, *mInputGainParam, channelData );
+    const float inputGainMapped =
+      juce::Decibels::decibelsToGain( juce::jmap< float >( *mInputGainParam, -24.f, 24.f ), -24.f );
 
-    const float rate = ( channel == 0 ) ? 0.f : *mModRateParam;
+    mInputGain[ channel ]->process(
+      channelData, numSamples, inputGainMapped, kParameterSmoothingCoeff_Fine< float >, channelData );
+
+    const float rate = ( channel == 0 ) ? 0.f : static_cast< float >( *mModRateParam );
+    const float rateMapped = juce::jmap< float >( rate, .01f, 10.f );
     mLfo[ channel ]->process( rate, *mModDepthParam, numSamples );
 
+    const float feedbackMapped = ( *mTypeParam < 1.f ) ? juce::jmap< float >( *mFeedbackParam, 0.f, 1.2f ) : 0.f;
+    const float delayTime = ( *mTypeParam < 1.f ) ? static_cast< float >( *mDelayTimeParam ) : .003f;
     mDelay[ channel ]->process(
       channelData,
       numSamples,
       *mDelayTimeParam,
       *mFeedbackParam,
-      *mTypeParam,
+      kParameterSmoothingCoeff_Fine< float >,
       *mDryWetParam,
-      mLfo[ channel ]->getBuffer(),
+      ( *mTypeParam < 1.f ) ? nullptr : mLfo[ channel ]->getBuffer(),
       channelData );
 
-    mOutputGain[ channel ]->process( channelData, numSamples, *mOutputGainParam, channelData );
+    const float outputGainMapped =
+      juce::Decibels::decibelsToGain( juce::jmap< float >( *mOutputGainParam, -24.f, 24.f ), -24.f );
+    mOutputGain[ channel ]->process(
+      channelData, numSamples, outputGainMapped, kParameterSmoothingCoeff_Fine< float >, channelData );
   }
 }
 
