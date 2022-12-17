@@ -1,21 +1,15 @@
 #include "VuMeter.h"
 
-#include "ui/LookAndFeel.h"
-
-#include "Parameters.h"
-#include "Processor.h"
-#include "Smoothing.h"
-
 namespace components {
 
-VuMeter::VuMeter( kap::Processor* processor ) : mProcessor{ processor }, mLevels{ 0.f, 0.f } {}
+VuMeter::VuMeter( float smoothingCoefficient ) : mSmoothingCoefficient{ smoothingCoefficient }, mLevels{ 0.f, 0.f } {}
 
 void VuMeter::paint( juce::Graphics& g )
 {
   const float meterHeight = static_cast< float >( getHeight() );
   const float meterWidth = getWidth() / ( numChannels() + 1.f );
 
-  g.setColour( ui::LookAndFeel::kColor6 );
+  g.setColour( findColour( ColourIds::meterUnfilledColourId ) );
   g.fillRect( 0.f, 0.f, meterWidth, meterHeight );
   g.fillRect( meterWidth * 1.5f, 0.f, meterWidth, meterHeight );
 
@@ -23,7 +17,7 @@ void VuMeter::paint( juce::Graphics& g )
   fills[ 0 ] = std::max( 0.f, meterHeight - ( meterHeight * mLevels[ 0 ] ) );
   fills[ 1 ] = std::max( 0.f, meterHeight - ( meterHeight * mLevels[ 1 ] ) );
 
-  g.setColour( ui::LookAndFeel::kColor7 );
+  g.setColour( findColour( ColourIds::meterFilledColourId ) );
   g.fillRect( 0.f, fills[ 0 ], meterWidth, meterHeight );
   g.fillRect( meterWidth * 1.5f, fills[ 1 ], meterWidth, meterHeight );
 }
@@ -36,10 +30,10 @@ void VuMeter::timerCallback()
 
   mLevels[ 0 ] = ( newLevels[ 0 ] > mLevels[ 0 ] )
     ? newLevels[ 0 ]
-    : dsp::kMeterSmoothingCoeff< float > * ( mLevels[ 0 ] - newLevels[ 0 ] ) + newLevels[ 0 ];
+    : mSmoothingCoefficient * ( mLevels[ 0 ] - newLevels[ 0 ] ) + newLevels[ 0 ];
   mLevels[ 1 ] = ( newLevels[ 1 ] > mLevels[ 1 ] )
     ? newLevels[ 1 ]
-    : dsp::kMeterSmoothingCoeff< float > * ( mLevels[ 1 ] - newLevels[ 1 ] ) + newLevels[ 1 ];
+    : mSmoothingCoefficient * ( mLevels[ 1 ] - newLevels[ 1 ] ) + newLevels[ 1 ];
 
   JUCE_UNDENORMALISE( mLevels[ 0 ] )
   JUCE_UNDENORMALISE( mLevels[ 1 ] )

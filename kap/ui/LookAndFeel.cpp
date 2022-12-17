@@ -1,5 +1,7 @@
 #include "LookAndFeel.h"
 
+#include "components/VuMeter.h"
+
 #include "ui_assets.h"
 
 namespace ui {
@@ -33,6 +35,9 @@ LookAndFeel::LookAndFeel()
 
   setColour( juce::Label::ColourIds::backgroundColourId, kColor3 );
   setColour( juce::Label::ColourIds::textColourId, kColor8 );
+
+  setColour( components::VuMeter::ColourIds::meterUnfilledColourId, kColor6 );
+  setColour( components::VuMeter::ColourIds::meterFilledColourId, kColor7 );
 }
 
 void LookAndFeel::drawButtonBackground(

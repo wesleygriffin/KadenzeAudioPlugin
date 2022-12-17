@@ -211,15 +211,15 @@ void Processor::processBlock( juce::AudioBuffer< float >& buffer, juce::MidiBuff
 
     const float rate = ( channel == 0 ) ? 0.f : static_cast< float >( *mModRateParam );
     const float rateMapped = juce::jmap< float >( rate, .01f, 10.f );
-    mLfo[ channel ]->process( rate, *mModDepthParam, numSamples );
+    mLfo[ channel ]->process( rateMapped, *mModDepthParam, numSamples );
 
-    const float feedbackMapped = ( *mTypeParam < 1.f ) ? juce::jmap< float >( *mFeedbackParam, 0.f, 1.2f ) : 0.f;
     const float delayTime = ( *mTypeParam < 1.f ) ? static_cast< float >( *mDelayTimeParam ) : .003f;
+    const float feedbackMapped = ( *mTypeParam < 1.f ) ? juce::jmap< float >( *mFeedbackParam, 0.f, 1.2f ) : 0.f;
     mDelay[ channel ]->process(
       channelData,
       numSamples,
-      *mDelayTimeParam,
-      *mFeedbackParam,
+      delayTime,
+      feedbackMapped,
       kParameterSmoothingCoeff_Fine< float >,
       *mDryWetParam,
       ( *mTypeParam < 1.f ) ? nullptr : mLfo[ channel ]->getBuffer(),

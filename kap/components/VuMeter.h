@@ -15,7 +15,7 @@ namespace components {
 class VuMeter : public juce::Component, public juce::Timer
 {
 public:
-  VuMeter( kap::Processor* processor );
+  VuMeter( float smoothingCoefficient );
 
   void paint( juce::Graphics& g ) override;
 
@@ -23,8 +23,14 @@ public:
 
   void setGainCallback( std::function< float( int channel ) > callback );
 
+  enum ColourIds
+  {
+    meterUnfilledColourId = 0x1b00, /**< The colour for the unfilled part of the meter. */
+    meterFilledColourId = 0x1a00 /**< The colour for the filled part of the meter. */
+  };
+
 private:
-  kap::Processor* mProcessor;
+  const float mSmoothingCoefficient;
   std::function< float( int ) > mGainCallback;
   std::array< float, 2 > mLevels;
 

@@ -5,6 +5,7 @@
 #include "ui/LookAndFeel.h"
 
 #include "Processor.h"
+#include "Smoothing.h"
 
 namespace ui {
 
@@ -35,7 +36,7 @@ void GainPanel::setParameter( const kap::Parameters::Parameter& parameter )
     ParameterDial::kLabelHeight );
   addAndMakeVisible( mLabel.get() );
 
-  mMeter.reset( new components::VuMeter( mProcessor ) );
+  mMeter.reset( new components::VuMeter( kap::kMeterSmoothingCoeff< float > ) );
   mMeter->setBounds(
     static_cast< int >( ( getWidth() * .5f ) - ( kMeterWidth * .5f ) ),
     static_cast< int >( getHeight() * .45f ),
