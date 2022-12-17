@@ -1,8 +1,6 @@
 #ifndef KAP_UI_PANELBASE_H_
 #define KAP_UI_PANELBASE_H_
 
-#include "ui/LookAndFeel.h"
-
 #include <juce_gui_basics/juce_gui_basics.h>
 
 namespace kap {

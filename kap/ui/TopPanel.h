@@ -13,6 +13,14 @@ public:
 
   void paint( juce::Graphics& g ) override;
 
+  struct LookAndFeelMethods
+  {
+    virtual ~LookAndFeelMethods() = default;
+
+    virtual juce::Font getTopPanelTextFont( TopPanel& ) = 0;
+    virtual juce::Colour getTopPanelTextColour( TopPanel& ) = 0;
+  };
+
   static constexpr int kWidth = MainPanel::kWidth;
   static constexpr int kHeight = 45;
   static constexpr int kPresetButtonWidth = 55;

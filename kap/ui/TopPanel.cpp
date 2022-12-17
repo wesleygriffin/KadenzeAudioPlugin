@@ -50,8 +50,8 @@ TopPanel::TopPanel( kap::Processor* processor ) : PanelBase{ processor }
 void TopPanel::paint( juce::Graphics& g )
 {
   PanelBase::paint( g );
-  g.setColour( LookAndFeel::kColor1 );
-  g.setFont( LookAndFeel::kFont2 );
+  g.setColour( LookAndFeel::getInstance()->getTopPanelTextColour( *this ) );
+  g.setFont( LookAndFeel::getInstance()->getTopPanelTextFont( *this ) );
   g.drawFittedText(
     "KADENZE AUDIO PLUGIN", kWidth - kLabelWidth, 0, kLabelWidth, getHeight(), juce::Justification::centred, 1 );
 }

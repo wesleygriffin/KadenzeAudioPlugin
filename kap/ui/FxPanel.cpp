@@ -41,11 +41,13 @@ void FxPanel::setStyle( Style style )
 
 void FxPanel::paint( juce::Graphics& g )
 {
-  PanelBase::paint( g );
+  auto lf = dynamic_cast< LookAndFeel* >( &getLookAndFeel() );
+  jassert(lf);
 
+  PanelBase::paint( g );
   const std::string label = ( mStyle == Style::kDelay ) ? "DELAY" : "CHORUS";
-  g.setColour( LookAndFeel::kColor4 );
-  g.setFont( LookAndFeel::kFont3 );
+  g.setColour( lf->getFxPanelTextColour( *this ) );
+  g.setFont( lf->getFxPanelTextFont( *this ) );
   g.drawFittedText( label, 0, 0, getWidth(), 80, juce::Justification::centred, 1 );
 }
 
@@ -61,7 +63,7 @@ void FxPanel::addDial( const kap::Parameters::Parameter& parameter, int x, int y
   addAndMakeVisible( mDials.back().get() );
 
   mLabels.emplace_back( new juce::Label( parameter.name + "Label", parameter.name ) );
-  mLabels.back()->setFont( LookAndFeel::kFont1 );
+  mLabels.back()->setFont( LookAndFeel::getInstance()->getFxPanelDialFont( *this ) );
   mLabels.back()->setJustificationType( juce::Justification::centred );
   mLabels.back()->setBounds(
     x,

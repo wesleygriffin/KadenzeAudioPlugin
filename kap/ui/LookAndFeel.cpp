@@ -4,40 +4,46 @@
 
 #include "ui_assets.h"
 
+#include <memory>
+
 namespace ui {
-
-const juce::Colour LookAndFeel::kColor1 = juce::Colour( 105, 105, 105 );
-const juce::Colour LookAndFeel::kColor2 = juce::Colour( 0, 0, 0 ).withAlpha( 0.f );
-const juce::Colour LookAndFeel::kColor3 = juce::Colour( 0, 0, 0 ).withAlpha( .3f );
-const juce::Colour LookAndFeel::kColor4 = juce::Colour( 0, 0, 0 ).withAlpha( .6f );
-const juce::Colour LookAndFeel::kColor5 = juce::Colour( 105, 105, 105 ).withAlpha( .3f );
-const juce::Colour LookAndFeel::kColor6 = juce::Colour( 0, 0, 0 ).withAlpha( .8f );
-const juce::Colour LookAndFeel::kColor7 = juce::Colour( 125, 125, 125 );
-const juce::Colour LookAndFeel::kColor8 = juce::Colour( 192, 192, 192 );
-
-const juce::Font LookAndFeel::kFont1( "Arial", 12.f, juce::Font::bold );
-const juce::Font LookAndFeel::kFont2( "Arial", 22.f, juce::Font::bold );
-const juce::Font LookAndFeel::kFont3( "Arial", 48.f, juce::Font::bold );
 
 const float LookAndFeel::kCornerSize = 6.f;
 
-LookAndFeel::LookAndFeel()
-: mSliderImage{ juce::ImageCache::getFromMemory( ui::kadenze_knob_png, ui::kadenze_knob_pngSize ) }
+LookAndFeel* LookAndFeel::getInstance()
 {
-  setColour( juce::ComboBox::ColourIds::backgroundColourId, kColor3 );
-  setColour( juce::ComboBox::ColourIds::outlineColourId, kColor2 );
-  setColour( juce::ComboBox::ColourIds::arrowColourId, kColor1 );
-  setColour( juce::ComboBox::ColourIds::textColourId, kColor8 );
+  static std::unique_ptr< LookAndFeel > sInstance( new LookAndFeel );
+  return sInstance.get();
+}
 
-  setColour( juce::TextButton::ColourIds::buttonColourId, kColor1 );
-  setColour( juce::TextButton::ColourIds::textColourOnId, kColor8 );
-  setColour( juce::TextButton::ColourIds::textColourOffId, kColor8 );
+LookAndFeel::LookAndFeel()
+: mColor1{ juce::Colour( 105, 105, 105 ) },
+  mColor2{ juce::Colour( 0, 0, 0 ).withAlpha( 0.f ) },
+  mColor3{ juce::Colour( 0, 0, 0 ).withAlpha( .3f ) },
+  mColor4{ juce::Colour( 0, 0, 0 ).withAlpha( .6f ) },
+  mColor5{ juce::Colour( 105, 105, 105 ).withAlpha( .3f ) },
+  mColor6{ juce::Colour( 0, 0, 0 ).withAlpha( .8f ) },
+  mColor7{ juce::Colour( 125, 125, 125 ) },
+  mColor8{ juce::Colour( 192, 192, 192 ) },
+  mFont1{ juce::Font{ "Arial", 12.f, juce::Font::bold } },
+  mFont2{ juce::Font{ "Arial", 22.f, juce::Font::bold } },
+  mFont3{ juce::Font{ "Arial", 28.f, juce::Font::bold } },
+  mSliderImage{ juce::ImageCache::getFromMemory( ui::kadenze_knob_png, ui::kadenze_knob_pngSize ) }
+{
+  setColour( juce::ComboBox::ColourIds::backgroundColourId, mColor3 );
+  setColour( juce::ComboBox::ColourIds::outlineColourId, mColor2 );
+  setColour( juce::ComboBox::ColourIds::arrowColourId, mColor1 );
+  setColour( juce::ComboBox::ColourIds::textColourId, mColor8 );
 
-  setColour( juce::Label::ColourIds::backgroundColourId, kColor3 );
-  setColour( juce::Label::ColourIds::textColourId, kColor8 );
+  setColour( juce::TextButton::ColourIds::buttonColourId, mColor1 );
+  setColour( juce::TextButton::ColourIds::textColourOnId, mColor8 );
+  setColour( juce::TextButton::ColourIds::textColourOffId, mColor8 );
 
-  setColour( components::VuMeter::ColourIds::meterUnfilledColourId, kColor6 );
-  setColour( components::VuMeter::ColourIds::meterFilledColourId, kColor7 );
+  setColour( juce::Label::ColourIds::backgroundColourId, mColor3 );
+  setColour( juce::Label::ColourIds::textColourId, mColor8 );
+
+  setColour( components::VuMeter::ColourIds::meterUnfilledColourId, mColor6 );
+  setColour( components::VuMeter::ColourIds::meterFilledColourId, mColor7 );
 }
 
 void LookAndFeel::drawButtonBackground(
@@ -49,11 +55,11 @@ void LookAndFeel::drawButtonBackground(
 {
   juce::Colour fillColor;
   if ( isButtonDown ) {
-    fillColor = kColor6;
+    fillColor = mColor6;
   } else if ( isMouseOverButton ) {
-    fillColor = kColor3;
+    fillColor = mColor3;
   } else {
-    fillColor = kColor4;
+    fillColor = mColor4;
   }
 
   const juce::Rectangle< float > bounds = button.getLocalBounds().toFloat().reduced( .5f, .5f );
@@ -76,11 +82,11 @@ void LookAndFeel::drawPopupMenuItem(
 {
   juce::Rectangle< int > r( area );
 
-  g.setColour( isHighlighted ? kColor5 : kColor4 );
+  g.setColour( isHighlighted ? mColor5 : mColor4 );
   g.fillRect( r.getX(), r.getY(), r.getWidth(), r.getHeight() - 1 );
 
-  g.setColour( isTicked ? kColor7 : kColor1 );
-  g.setFont( kFont1 );
+  g.setColour( isTicked ? mColor7 : mColor1 );
+  g.setFont( mFont1 );
   r.setLeft( 10 );
   r.setY( 1 );
   g.drawFittedText( text, r, juce::Justification::left, 1 );
@@ -99,7 +105,7 @@ void LookAndFeel::drawComboBox(
 {
   const juce::Rectangle< int > boxBounds( 0, 0, width, height );
 
-  g.setColour( kColor3 );
+  g.setColour( mColor3 );
   g.fillRoundedRectangle( boxBounds.toFloat(), kCornerSize / 2.f );
 
   juce::Rectangle< int > arrow( width - 30, 0, 20, height );

@@ -27,7 +27,7 @@ void GainPanel::setParameter( const kap::Parameters::Parameter& parameter )
   addAndMakeVisible( mDial.get() );
 
   mLabel.reset( new juce::Label( parameter.name + "Label", parameter.name ) );
-  mLabel->setFont( LookAndFeel::kFont1 );
+  mLabel->setFont( LookAndFeel::getInstance()->getGainPanelLabelFont( *this ) );
   mLabel->setJustificationType( juce::Justification::centred );
   mLabel->setBounds(
     static_cast< int >( ( getWidth() * .5f ) - ( ParameterDial::kTotalWidth * .5f ) ),

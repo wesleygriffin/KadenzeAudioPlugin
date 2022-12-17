@@ -35,7 +35,7 @@ void Delay< Real >::process(
   Real* outBuffer )
 {
   for ( int sample = 0; sample < numSamples; ++sample ) {
-    mTimeSmoothed = mTimeSmoothed + ( modulationBuffer ? modulationBuffer[ sample ] : Real{ 1 } )
+    mTimeSmoothed = mTimeSmoothed + ( modulationBuffer ? modulationBuffer[ sample ] : Real{ 0 } )
       - smoothingCoefficient * ( mTimeSmoothed - time );
 
     const Real delayTimeInSamples = mTimeSmoothed * static_cast< Real >( mSampleRate );

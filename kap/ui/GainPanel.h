@@ -28,6 +28,13 @@ public:
   static constexpr int kHeight = MainPanel::kHeight - TopPanel::kHeight;
   static constexpr int kMeterWidth = 36;
 
+  struct LookAndFeelMethods
+  {
+    virtual ~LookAndFeelMethods() = default;
+
+    virtual juce::Font getGainPanelLabelFont( GainPanel& ) = 0;
+  };
+
 private:
   std::unique_ptr< ParameterDial > mDial;
   std::unique_ptr< juce::Label > mLabel;

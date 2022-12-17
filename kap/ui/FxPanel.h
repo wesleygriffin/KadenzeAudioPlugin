@@ -32,6 +32,15 @@ public:
   static constexpr int kWidth = CenterPanel::kWidth;
   static constexpr int kHeight = CenterPanel::kHeight - CenterPanelMenuBar::kHeight;
 
+  struct LookAndFeelMethods
+  {
+    virtual ~LookAndFeelMethods() = default;
+
+    virtual juce::Font getFxPanelTextFont( FxPanel& ) = 0;
+    virtual juce::Colour getFxPanelTextColour( FxPanel& ) = 0;
+    virtual juce::Font getFxPanelDialFont( FxPanel& ) = 0;
+  };
+
 private:
   Style mStyle{ Style::kDelay };
 
